@@ -1,0 +1,6 @@
+1. Setup Yelp API
+2. Grab User's Geolacation
+3. Create Form to ask Food/Activities, Price, Location (10+ mi, 15+ mil)
+4. Create another page to show 10 places
+5. Places are clickable to show more information about the place 
+5A. Use Mapbox API to show the distance between the user's location and the actual location
