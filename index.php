@@ -1,10 +1,5 @@
 <?php
-    require __DIR__ .'/vendor/autoload.php';
-    $dotenv = Dotenv\Dotenv::create(__DIR__);
-    $dotenv->load();
-
-    echo '<pre>';
-    var_dump(getenv('APP_ENV'));
+    require __DIR__ .'/api/yelp.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">

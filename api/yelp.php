@@ -1,4 +1,15 @@
 <?php
+    /**
+     * Grabbing DotENV to control my .env variables
+     */
+    require __DIR__ .'/../vendor/autoload.php';
+    $dotenv = Dotenv\Dotenv::create(__DIR__, '/../.env');
+    $dotenv->load();
+    //echo '<pre>';
+    //var_dump(getenv('API_KEY'));
+    //var_dump("MADE IT");
+    //die();
+
 /**
  * Yelp Fusion API code sample.
  *
@@ -16,7 +27,7 @@
 // API key placeholders that must be filled in by users.
 // You can find it on
 // https://www.yelp.com/developers/v3/manage_app
-$API_KEY = 'LVbOW3MVWwNW9QcVb4ZubeDlozZ5I6drMN9PX35PxSWeT2J7Bpu9JTNMLxo_QblfKxbcVDrwp9RxSGiJ8aZMjwRk-bum9Rz17TgG8BgByc2F2raYX36ZcMrVBZTTW3Yx';
+$API_KEY = getenv('API_KEY');
 
 // API constants, you shouldn't have to change these.
 $API_HOST = "https://api.yelp.com";
