@@ -1,15 +1,10 @@
 <?php
-    /**
-     * Grabbing DotENV to control my .env variables
-     */
-    require __DIR__ .'/../vendor/autoload.php';
-    $dotenv = Dotenv\Dotenv::create(__DIR__, '/../.env');
-    $dotenv->load();
-    //echo '<pre>';
-    //var_dump(getenv('API_KEY'));
-    //var_dump("MADE IT");
-    //die();
-
+/**
+ * Grabbing DotENV to control my .env variables
+ */
+require __DIR__ .'/../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::create(__DIR__, '/../.env');
+$dotenv->load();
 /**
  * Yelp Fusion API code sample.
  *
@@ -87,18 +82,20 @@ function request($host, $path, $url_params = array()) {
  * @param    $location    The search location passed to the API 
  * @return   The JSON response from the request 
  */
-function search($searchType, $price, $location) {
+function search($searchType, $price, $location, $categories) {
     $url_params = array();
     
     $url_params['term'] = $searchType;
+    //$url_params['location'] = $location;
     $url_params['longitude'] = $location[0];
     $url_params['latitude'] = $location[1];
     //8046.72 is equivalent to 5 miles 16093.44 is equivalent to 10 miles
     $url_params['radius'] = 16093;
     $url_params['price'] = $price;
-    $url_params['sort_by'] = 'distance';
+    $url_params['sort_by'] = 'rating';
     $url_params['open_now'] = true;
-    $url_params['limit'] = 15;
+    $url_params['limit'] = 8;
+    $url_params['categories'] = $categories;
     
     //converts into 'https://api.yelp.com/v3/businesses/search/location&limit&price&sort_by&radius'
     $response = request($GLOBALS['API_HOST'], $GLOBALS['SEARCH_PATH'], $url_params);
@@ -109,6 +106,30 @@ function search($searchType, $price, $location) {
 
     return $data['businesses'];
 }
+
+function searchActivities($searchType, $location, $categories){
+    $url_params = array();
+
+    $url_params['term'] = $searchType;
+    $url_params['longitude'] = $location[0];
+    $url_params['latitude'] = $location[1];
+    $url_params['categories'] = $categories;
+    $url_params['limit'] = 20;
+
+    $response = request($GLOBALS['API_HOST'], $GLOBALS['SEARCH_PATH'], $url_params);
+    
+    $pretty_response = json_encode(json_decode($response), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+    $data = json_decode($pretty_response, true);
+
+    //var_dump($data);
+    //die();
+  
+    return $data['businesses'];
+
+  
+}
+
 
 /**
  * Query the Business API by business_id
@@ -147,7 +168,7 @@ function get_reviews($business_id) {
     $data = json_decode($pretty_response, true);
 
 
-    return $data;
+    return $data['reviews'];
 
 
     //converts into 'https://api.yelp.com/v3/businesses/search/location&limit&price&sort_by&radius'
