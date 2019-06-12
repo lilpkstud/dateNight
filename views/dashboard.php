@@ -1,7 +1,11 @@
 <?php
 require __DIR__ . '/../api/yelp.php';
-
+require __DIR__ . '/../views/header/header.php';
 $location = [$_POST['longitude'], $_POST['latitude']];
+
+array_push($_SESSION['user_locations'], $location);
+
+var_dump($_SESSION['user_locations']);
 
 
 if($_POST['searchTerm'] == 'restaurants'){
@@ -22,16 +26,6 @@ if($_POST['searchTerm'] == 'activities'){
 //die();
 //echo count($search);
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Date Night</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-<body>
     <div class="container">
         <h1>Dashboard Page</h1>
         <div class="row">
@@ -49,7 +43,12 @@ if($_POST['searchTerm'] == 'activities'){
                             <h4 class="card-title"><?=$info['name']?></h4>
                             <p class="card-text">
                                 <?=$info['location']['display_address'][0].' '.$info['location']['display_address'][1]?><br>
-                                <?=$info['location']['display_address'][2]?><br>
+                                <?php
+                                if(isset($info['location']['display_address'][2])) {
+                                   echo $info['location']['display_address'][2];
+                                }
+                                ?>
+                                <br>
                             </p>
                         </div>
                         <ul class="list-group list-group-flush">

@@ -5,6 +5,9 @@
 require __DIR__ .'/../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::create(__DIR__, '/../.env');
 $dotenv->load();
+
+session_start();
+$_SESSION['user_locations'] = [];
 /**
  * Yelp Fusion API code sample.
  *

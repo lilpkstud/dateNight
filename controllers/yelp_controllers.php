@@ -5,6 +5,10 @@ require __DIR__ . '/../api/yelp.php';
 
 $location = [$_POST['longitude'], $_POST['latitude']];
 
+//array_push($_SESSION['user_locations'], $location);
+
+//var_dump($_SESSION['user_locations']);
+
 
 if($_POST['searchTerm'] == 'restaurants'){
     $categories = 
