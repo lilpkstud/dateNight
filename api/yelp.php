@@ -7,7 +7,25 @@ $dotenv = Dotenv\Dotenv::create(__DIR__, '/../.env');
 $dotenv->load();
 
 session_start();
-$_SESSION['user_locations'] = [];
+//$_SESSION['user_locations'] = [];
+
+if(isset($_SESSION['user_locations'])){
+    var_dump($_SESSION['user_locations']);
+}else {
+    $_SESSION['user_locations'] = [];
+}
+
+
+function saveLocation($location){
+    if(in_array($location, $_SESSION['user_locations'])){
+        echo "User has already visited this location";
+    } else {
+        array_push($_SESSION['user_locations'], $location);
+    }
+    //var_dump($location);
+    //var_dump($_SESSION['user_locations']);
+    //die();
+}
 /**
  * Yelp Fusion API code sample.
  *
@@ -97,7 +115,7 @@ function search($searchType, $price, $location, $categories) {
     $url_params['price'] = $price;
     $url_params['sort_by'] = 'rating';
     $url_params['open_now'] = true;
-    $url_params['limit'] = 8;
+    $url_params['limit'] = 20;
     $url_params['categories'] = $categories;
     
     //converts into 'https://api.yelp.com/v3/businesses/search/location&limit&price&sort_by&radius'
@@ -131,6 +149,31 @@ function searchActivities($searchType, $location, $categories){
     return $data['businesses'];
 
   
+}
+
+function searchHappy($searchType, $price, $location){
+    $url_params = array();
+    
+    $url_params['term'] = $searchType;
+    //$url_params['location'] = $location;
+    $url_params['longitude'] = $location[0];
+    $url_params['latitude'] = $location[1];
+    //8046.72 is equivalent to 5 miles 16093.44 is equivalent to 10 miles
+    $url_params['radius'] = 16093;
+    $url_params['price'] = $price;
+    //$url_params['sort_by'] = 'rating';
+    $url_params['open_now'] = true;
+    $url_params['limit'] = 20;
+    //$url_params['categories'] = $categories;
+    
+    //converts into 'https://api.yelp.com/v3/businesses/search/location&limit&price&sort_by&radius'
+    $response = request($GLOBALS['API_HOST'], $GLOBALS['SEARCH_PATH'], $url_params);
+    
+    $pretty_response = json_encode(json_decode($response), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+    $data = json_decode($pretty_response, true);
+
+    return $data['businesses'];
 }
 
 

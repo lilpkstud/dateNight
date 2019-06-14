@@ -1,18 +1,22 @@
 <?php
-require __DIR__ . '/../api/yelp.php';
-require __DIR__ . '/../views/header/header.php';
+require($_SERVER['DOCUMENT_ROOT'].'/api/yelp.php');
+require($_SERVER['DOCUMENT_ROOT'].'/views/header/header.php');
+
 $location = [$_POST['longitude'], $_POST['latitude']];
-
-array_push($_SESSION['user_locations'], $location);
-
-var_dump($_SESSION['user_locations']);
-
+saveLocation($location);
 
 if($_POST['searchTerm'] == 'restaurants'){
     $categories = 
     //var_dump($location);
     //die();
     $search = search('Best places to eat on date night', $_POST['price'], $location, 'restaurants');
+}
+if($_POST['searchTerm'] == 'happyhour'){
+    //$search = search('Happy Hour', $_POST['price'], $location, 'restaurants,breweries, bars, barcrawl');
+    /**
+     * Not Giving me the proper data I want....change categories and open?
+     */
+    $search = searchHappy('Happy Hour', $_POST['price'], $location);
 }
 if($_POST['searchTerm'] == 'activities'){
     $search = searchActivities('Fun Things to Do on Date Night', $location, 'active, escapegames, gokarts,golf,hiking,lasertag,mini_golf,scavengerhunts,zoos,arcades,movietheaters,museums,paintandsip');
@@ -54,7 +58,17 @@ if($_POST['searchTerm'] == 'activities'){
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item"><strong>Favorite:</strong></li>
                             <li class="list-group-item"><strong>Yelp Rating: </strong><?=$info['rating']?></li>
-                            <li class="list-group-item"><strong>Price: </strong><?=$info['price']?></li>
+                            <?php
+                                if(isset($info['price'])){
+                            ?>
+                                    <li class="list-group-item"><strong>Price: </strong><?=$info['price']?></li>
+                            <?php
+                                } else {
+                            ?>
+                                    <li class="list-group-item"><strong>Price: </strong> Not Given </li>
+                            <?php
+                                }
+                            ?>
                         </ul>
                         <div class="card-body">
                             <a href="#" class="card-link">Card link</a>
